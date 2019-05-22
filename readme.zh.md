@@ -1,77 +1,84 @@
-# Fast Workflow in Laravel With Custom Generators
+# 使用自定义代码生成工具快速进行Laravel开发
 
 [![Build Status](https://travis-ci.org/JeffreyWay/Laravel-4-Generators.png?branch=master)](https://travis-ci.org/JeffreyWay/Laravel-4-Generators)
 
-This Laravel package provides a variety of generators to speed up your development process. These generators include:
+这个Laravle包提供了一种代码生成器，使得你可以加速你的开发进程，这些生成器包括：
 
-- `generate:model`
-- `generate:view`
-- `generate:controller`
-- `generate:seed`
-- `generate:migration`
-- `generate:pivot`
-- `generate:resource`
-- `generate:scaffold`
-
-## Installation
-
-> [Want a 5-minute video overview?](https://dl.dropboxusercontent.com/u/774859/Work/Laravel-4-Generators/Get-Started-With-Laravel-Custom-Generators.mp4)
+- `generate:model`   - 模型生成器
+- `generate:view`    - 视图生成器
+- `generate:controller`  - 控制器生成器
+- `generate:seed`    - 数据库填充器
+- `generate:migration`   - 迁移
+- `generate:pivot`   - 关联表
+- `generate:resource` -资源
+- `generate:scaffold` - 脚手架
 
 
-## Laravel 4.2 and Below
+## 安装
 
-Begin by installing this package through Composer. Edit your project's `composer.json` file to require `way/generators`.
+> [需要一个五分钟教程视频吗?](https://dl.dropboxusercontent.com/u/774859/Work/Laravel-4-Generators/Get-Started-With-Laravel-Custom-Generators.mp4)
 
-	"require-dev": {
+## Laravel 4.2 或者更低的版本
+
+使用Composer安装这个包，编辑你项目的`composer.json`文件，在require中添加`way/generators`
+
+    "require-dev": {
 		"way/generators": "~2.0"
 	}
 
-> There is no support for Laravel 5, as the framework now includes a number of generators out of the box.
-
-Next, update Composer from the Terminal:
+然后，在命令行下执行composer update：
 
     composer update --dev
 
-Once this operation completes, the final step is to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
+一旦这个操作完成，就只需要最后一步，在配置文件中加入服务提供者。打开`app/config/app.php`文件，添加一个新的记录到providers数组中.
 
     'Way\Generators\GeneratorsServiceProvider'
 
-That's it! You're all set to go. Run the `artisan` command from the Terminal to see the new `generate` commands.
+这样就可以了，你已经安装完成并可以运行这个包了。运行artisan命令行则可以在终端上看到generate相关命令。
 
     php artisan
-    
-Next, update Composer from the Terminal:
+
+## Laravel 5.0 或者更高版本
+
+使用Composer安装这个包，编辑你项目的`composer.json`文件，在require中添加`way/generators`
+
+	"require-dev": {
+		"way/generators": "~3.0"
+	}
+由于在Laravel高版本中默认文件夹结构，需要3.0或者更高的版本，才能适应5.0版本以上的Laravel
+
+然后，在命令行下执行composer update：
 
     composer update --dev
 
-Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
+一旦这个操作完成，就只需要最后一步，在配置文件中加入服务提供者。打开`app/config/app.php`文件，添加一个新的记录到providers数组中.
 
     'Way\Generators\GeneratorsServiceProvider'
 
-That's it! You're all set to go. Run the `artisan` command from the Terminal to see the new `generate` commands.
+这样就可以了，你已经安装完成并可以运行这个包了。运行artisan命令行则可以在终端上看到generate相关命令。
 
     php artisan
 
-## Usage
+## 使用示例
 
-Think of generators as an easy way to speed up your workflow. Rather than opening the models directory, creating a new file, saving it, and adding the class, you can simply run a single generate command.
+想象一下使用一个生成器加速你的工作流。而不是打开models文件夹，创建一个新的文件，保存它，并且在文件中添加一个class，你可以简单的运行一个生成器命令即可完成这一系列动作。
 
-- [Migrations](#migrations)
-- [Models](#models)
-- [Views](#views)
-- [Seeds](#seeds)
-- [Pivot](#pivot)
-- [Resources](#resources)
-- [Scaffolding](#scaffolding)
-- [Configuration](#configuration)
+- [Migrations 迁移](#migrations)
+- [Models 模型](#models)
+- [Views 视图](#views)
+- [Seeds 填充](#seeds)
+- [Pivot 关联表](#pivot)
+- [Resources 资源](#resources)
+- [Scaffolding 脚手架](#scaffolding)
+- [Configuration 配置](#configuration)
 
-### Migrations
+### 迁移
 
-Laravel offers a migration generator, but it stops just short of creating the schema (or the fields for the table). Let's review a couple examples, using `generate:migration`.
+Laravel提供了一个迁移生成器，但是它仅仅能够创建数据库结构。让我们再回顾几个例子，使用`generate:migration`。
 
     php artisan generate:migration create_posts_table
 
-If we don't specify the `fields` option, the following file will be created within `app/database/migrations`.
+如果我们不指定字段配置项，则下面这个文件将被创建在`app/database/migrations`目录下。
 
 ```php
 <?php
@@ -108,13 +115,14 @@ class CreatePostsTable extends Migration {
 
 ```
 
-Notice that the generator is smart enough to detect that you're trying to create a table. When naming your migrations, make them as descriptive as possible. The migration generator will detect the first word in your migration name and do its best to determine how to proceed. As such, for `create_posts_table`, the keyword is "create," which means that we should prepare the necessary schema to create a table.
+注意，生成器能够检测到你正在尝试创建一个表。迁移的名称，尽量应该是可描述的。生成器将扫描你的生成器名字的第一个单词，并尽力确定如何继续。例如，对于迁移`create_posts_table`，关键字"create"，意味着我们应该准备必要的架构来创建表。
 
-If you instead use a migration name along the lines of `add_user_id_to_posts_table`, in that case, the keyword is "add," signaling that we intend to add rows to an existing table. Let's see what that generates.
+如果你使用`add_user_id_to_posts_table`代替迁移的名字，在上面的示例中，关键字"add"，意味着我们将添加一行到现有的表中，然我们看看这个生成器命令。
 
     php artisan generate:migration add_user_id_to_posts_table
 
-This will prepare the following boilerplate:
+这个命令将会准备一个下面这样的样板：
+
 
 ```php
 <?php
@@ -152,24 +160,24 @@ class AddUserIdToPostsTable extends Migration {
 }
 ```
 
-Notice how, this time, we're not doing `Schema::create`.
+注意：这一次我们没有做`Schema::create`
 
-#### Keywords
+#### 关键字
 
-When writing migration names, use the following keywords to provide hints for the generator.
+当你在写迁移的名字的时候，使用下面的关键字给生成器提供提示。
 
 - `create` or `make` (`create_users_table`)
 - `add` or `insert` (`add_user_id_to_posts_table`)
 - `remove` (`remove_user_id_from_posts_table`)
 - `delete` or `drop` (`delete_users_table`)
 
-#### Generating Schema
+#### 生成数据库模式
 
-This is pretty nice, but let's take things a step further and also generate the schema, using the `fields` option.
+这是非常漂亮的，但是让我们更进一步，生成数据库模式的同时，使用`fields`选项。
 
     php artisan generate:migration create_posts_table --fields="title:string, body:text"
 
-Before we decipher this new option, let's see the output:
+在我们解释这个选项之前，让我们先看一下输出：
 
 ```php
 <?php
@@ -207,13 +215,14 @@ class CreatePostsTable extends Migration {
 }
 ```
 
-Nice! A few things to notice here:
+漂亮！少量的提示在这里：
 
-- The generator will automatically set the `id` as the primary key.
-- It parsed the `fields` options, and added those fields.
-- The drop method is smart enough to realize that, in reverse, the table should be dropped entirely.
+- 生成器将默认使用自增的`id`字段作为主键
+- 它解析`fields`选项，并添加这些字段
+- drop方法能够足够聪明的意识到，在相反的情况下，这个表应该被完全删除
 
-To declare fields, use a comma+space-separated list of key:value:option sets, where `key` is the name of the field, `value` is the [column type](http://laravel.com/docs/schema#adding-columns), and `option` is a way to specify indexes and such, like `unique` or `nullable`. Here are some examples:
+声明字段，使用逗号+空格分隔键值列表[key:value:option sets]，其中`key`表示字段的名称，`value`表示[字段的类型](http://laravel.com/docs/schema#adding-columns)，`option`表示制定索引或者像是`unique`、`nullable`这样的属性。
+这里是一些示例:
 
 - `--fields="first:string, last:string"`
 - `--fields="age:integer, yob:date"`
@@ -221,17 +230,17 @@ To declare fields, use a comma+space-separated list of key:value:option sets, wh
 - `--fields="name:string:default('John Doe'), bio:text:nullable"`
 - `--fields="username:string(30):unique, age:integer:nullable:default(18)"`
 
-Please make note of the last example, where we specify a character limit: `string(30)`. This will produce `$table->string('username', 30)->unique();`
+请注意最后一个示例，这里我们指定了`string(30)`的字符串限制。这将产生`$table->string('username', 30)->unique();`
 
-It is possible to destroy the table by issuing:
+使用生成器删除表是可能的：
 
 	php artisan generate:migration delete_posts_table
 
-As a final demonstration, let's run a migration to remove the `completed` field from a `tasks` table.
+作为最后一个示例i，让我们运行一个迁移，从`tasks`表中，删除`completed`字段。
 
     php artisan generate:migration remove_completed_from_tasks_table --fields="completed:boolean"
 
-This time, as we're using the "remove" keyword, the generator understands that it should drop a column, and add it back in the `down()` method.
+这一次，我们使用了"remove"关键字，生成器知道它要删除一个字段，并且把它添加到`down()`方法中。
 
 ```php
 <?php
@@ -269,11 +278,11 @@ class RemoveCompletedFromTasksTable extends Migration {
 }
 ```
 
-### Models
+### 模型
 
     php artisan generate:model Post
 
-This will create the file, `app/models/Post.php` and insert the following boilerplate:
+这将生成一个文件，`app/models/Post.php`并且写入下面的样板
 
 ```php
 <?php
@@ -283,23 +292,24 @@ class Post extends \Eloquent {
 }
 ```
 
-### Views
+### 视图
 
-The view generator is fairly simple.
+视图生成器相当简单。
 
 ```bash
 php artisan generate:view admin.reports.index
 ```
 
-This command will create an empty view, `/app/views/admin/reports/index.blade.php`. If the provided directory tree does not exist, it will be created for you.
+这个命令将创建一个空的视图，`/app/views/admin/reports/index.blade.php`。如果提供的文件夹不存在，它会自动帮你创建
 
-### Seeds
+### Seeds 生成数据[译注：应该是用来填充测试数据]
 
+Laravel为我们提供了非常灵活的方式来填充表
 Laravel provides us with a flexible way to seed new tables.
 
     php artisan generate:seed users
 
-Set the argument to the name of the table that you'd like a seed file for. This will generate `app/database/seeds/UsersTableSeeder.php` and populate it with:
+设置你想要生成的生成文件参数。这将生成 `app/database/seeds/UsersTableSeeder.php` 并用一下内容作为填充：
 
 ```php
 <?php
@@ -324,19 +334,18 @@ class UsersTableSeeder extends Seeder {
 }
 ```
 
-This will give you a basic bit of boilerplate, using the popular Faker library. This is a nice way to seed your DB tables. Don't forget to pull in Faker through Composer!
+这将使用流行的Faker库为你提供一个基本的样板。这将是一个非常漂亮的方式来生成你的数据库表。不要忘记使用Composer来安装Faker！
 
-### Pivot
+### 关联表[译注：pivot 这个词愿意是中心点、中枢的意思，这里翻译成关联表比较合适，通俗一点就是两个表的mapping关系表，带有外键约束]
+当你需要一个关联表时，`generate:pivot`可以加速建立相应的表。
 
-When you require a new pivot table, the `generate:pivot` table expedites the process of creating the appropriate migration.
-
-Simply pass the name of the two tables that require a joining pivot table. For `orders` and `users`, you might do:
+简单的传递两个需要关联的表的名字。对于`orders`和`users`表，你可以：
 
 ```bash
 php artisan generate:pivot orders users
 ```
 
-This will create the following migration:
+这个命令将创建下面的迁移：
 
 ```php
 <?php
@@ -377,41 +386,41 @@ class CreateOrderUserTable extends Migration {
 }
 ```
 
-Notice that it correctly sets the table name according to your two provided tables, in alphabetical order. Now, run `php artisan migrate` to create your pivot table!
+注意，它会正确设置你提供的两个表名，排名不分先后。现在，运行`php artisan migrate`来创建你的关联表！
 
-### Resources
+### 资源
 
-The `generate:resource` command will do a number of things for you:
+`generate:resource`命令将会为你坐一系列的事情：
 
-- Generate a model
-- Generate index, show, create, and edit views
-- Generate a controller
-- Generate a migration with schema
-- Generate a table seeder
-- Migrate the database
+- 生成一个模型
+- 生成index, show, create, edit视图
+- 生成一个控制器
+- 生成一个数据库结构迁移
+- 生成一个数据库填充
+- 迁移这个数据库
 
-When triggering this command, you'll be asked to confirm each of these actions. That way, you can tailor the generation to what you specifically require.
+当你触发这个命令，它将对每个动作进行问询。通过这个方式，你可以告诉生成器，哪些是你确实需要的。
 
-#### Example
+#### 例子
 
-Imagine that you need to build a way to display posts. While you could manually create a controller, create a model, create a migration and populate it with the schema, and then create a table seeder...why not let the generator do that?
+想象如果你需要创建一个方法来显示文章。你需要手动创建一个控制器，一个模型，一个数据库迁移并且填充它，并且创建一个数据库填充...为什么不用生成器来做呢？
 
 ```bash
 php artisan generate:resource post --fields="title:string, body:text"
 ```
 
-If you say yes to each confirmation, this single command will give you boilerplate for:
+如果你对每个询问说yes，这个命令会给你如下样板：
 
 - app/models/Post.php
 - app/controllers/PostsController.php
 - app/database/migrations/timestamp-create_posts_table.php (including the schema)
 - app/database/seeds/PostsTableSeeder.php
 
-### Scaffolding
+### Scaffolding 脚手架
 
-The scaffolding generator is similar to `generate:resource`, except it will add some beginning boilerplate to these files, as a convenience.
+脚手架生成器类似于`generate:resource`，除了创建一些初始化样板外，同时也是为了方便。
 
-For instance, when running `generate:scaffold post`, your controller boilerplate will be:
+例如，在运行`generate:scaffold post`时，你的控制器模板将会将会是：
 
 ```php
 <?php
@@ -523,25 +532,23 @@ class PostsController extends \BaseController {
 }
 ```
 
-Please note that you're encouraged to modify this generated controller. It simply provides a starting point.
+请注意我们鼓励您去修改这些自动生成的控制器。它只是一个简单的开始。
 
-### Configuration
+### Configuration 配置
 
-You may want to modify your templates - how the generated files are formatted. To allow for this, you
-need to publish the templates that, behind the scenes, the generators will reference.
+你或许想修改你的模板--自动生成的文件是怎样格式化的。考虑到这一点，你需要发布你的模板，生成器将会使用它们。
 
 ```bash
 php artisan generate:publish-templates
 ```
 
-This will copy all templates to your `app/templates` directory. You can modify these however you wish to fit your desired formatting. If you'd prefer a different directory:
+你要复制所有`app/templates`目录下的模板。你可以修改这些只要你满意它的格式。如果你喜欢不同的目录：
 
 ```bash
 php artisan generate:publish-templates --path=app/foo/bar/templates
 ```
 
-When you run the `generate:publish-templates` command, it will also publish
-the configuration to `app/config/packages/way/generators/config/config.php`. This file will look somewhat like:
+当你运行`generate:publish-templates` ,它也会将配置发布到`app/config/packages/way/generators/config/config.php`文件。这个文件看起来有点像：
 
 ```php
 <?php
@@ -588,11 +595,11 @@ return [
 ];
 ```
 
-Also, while you're in this file, note that you can also update the default target directory for each generator.
+同时，当你修改这个文件的时候，注意你也可以更新每个默认的生成器目标目录。
 
-### Shortcuts
+### Shortcuts 快捷命令
 
-Because you'll likely type these commands over and over, it makes sense to create aliases.
+因为你可能会一次又一次的键入如下命令，命令别名显然是有意义的。
 
 ```bash
 # Generator Stuff
@@ -603,5 +610,23 @@ alias g:s="php artisan generate:seed"
 alias g:mig="php artisan generate:migration"
 alias g:r="php artisan generate:resource"
 ```
+这些将被保存，例如，你的`~/.bash_profile` 或者 `~/.bashrc` 文件中。
 
-These can be stored in, for example, your `~/.bash_profile` or `~/.bashrc` files.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
