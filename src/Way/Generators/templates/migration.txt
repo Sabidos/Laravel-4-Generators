@@ -26,4 +26,14 @@ class $CLASS$ extends Migration {
 		$DOWN$
 	}
 
+	/**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function help()
+    {
+    	$DOWN$
+    }
+
 }
