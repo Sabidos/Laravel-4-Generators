@@ -12,10 +12,11 @@ class $CLASS$ extends Migration {
 	 */
 	public function up()
 	{
-		foreach ($this->listSchemas() as $schema) {
-                    PGSchema::switchTO($schema->schemas);
-                    $UP$
-                }
+		foreach ($this->listSchemas() as $schema)
+		{
+             PGSchema::switchTO($schema->schemas);
+             $UP$
+        }
         PGSchema::switchTO('public');
 	}
 
@@ -27,26 +28,28 @@ class $CLASS$ extends Migration {
 	 */
 	public function down()
 	{
-		foreach ($this->listSchemas() as $schema) {
-                            PGSchema::switchTO($schema->schemas);
-                            $DOWN$
-                        }
+		foreach ($this->listSchemas() as $schema)
+		{
+            PGSchema::switchTO($schema->schemas);
+            $DOWN$
+        }
         PGSchema::switchTO('public');
 	}
 
+
 	/**
-     * Lista todos os Schemas Disponiveis the migrations.
+     * Lista todos os Schemas Disponiveis.
      *
      * @return void
      */
     public function listSchemas()
-        {
-            $schemas = DB::table('pg_catalog.pg_namespace')
-                ->select('nspname as schemas')
-                ->whereNotIn('nspname', ['pg_catalog','public','pg_toast', 'pg_temp_1', 'pg_toast_temp_1','information_schema', 'log', 'catalogo'])
-                ->orderBy('schemas')
-                ->get();
-            return $schemas;
-        }
+    {
+        $schemas = DB::table('pg_catalog.pg_namespace')
+            ->select('nspname as schemas')
+            ->whereNotIn('nspname', ['pg_catalog','public','pg_toast', 'pg_temp_1', 'pg_toast_temp_1','information_schema', 'log', 'catalogo', 'un_00000_dev'])
+            ->orderBy('schemas')
+            ->get();
+        return $schemas;
+    }
 
 }
